@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ร้านอาหารไทย</title>
+    <style>
+      /* ปรับพื้นหลังและฟอนต์ */
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f4f6f9;
+        margin: 0;
+        padding: 0;
+        color: #333;
+      }
+
+      /* Container สำหรับเนื้อหาหลัก */
+      .container {
+        max-width: 480px;
+        margin: 50px auto;
+        background: #fff;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+
+      /* ชื่อร้านอาหาร */
+      h2 {
+        color: #ff6347;
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+        font-weight: 600;
+      }
+
+      /* ส่วนของหัวข้อเมนู */
+      h3 {
+        font-size: 1.4rem;
+        color: #007bff;
+        margin-bottom: 15px;
+        font-weight: 500;
+      }
+
+      /* การจัดการกับ label */
+      label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 8px;
+        color: #555;
+        font-size: 1rem;
+      }
+
+      /* ปรับฟอนต์ของ select, input และ button */
+      select,
+      input,
+      button {
+        width: 100%;
+        padding: 12px;
+        margin-top: 8px;
+        margin-bottom: 20px;
+        font-size: 1rem;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+      }
+
+      /* ปุ่มคำนวณ */
+      button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        font-size: 1.1rem;
+        font-weight: bold;
+      }
+
+      button:hover {
+        background-color: #0056b3;
+      }
+
+      /* ส่วนผลลัพธ์ */
+      .result {
+        background-color: #e8f5e9;
+        border-radius: 10px;
+        padding: 15px;
+        margin-top: 20px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        font-size: 1.1rem;
+        text-align: left;
+      }
+
+      .result strong {
+        color: #007bff;
+        font-size: 1.2rem;
+        display: block;
+        margin-bottom: 10px;
+      }
+
+      /* เพิ่มเอฟเฟคให้เมื่อมีการเลือกจาก select หรือ input */
+      select:focus,
+      input:focus {
+        border-color: #007bff;
+        outline: none;
+      }
+
+      /* การจัดการกับรูปแบบของข้อความในผลลัพธ์ */
+      .result p {
+        margin: 5px 0;
+      }
+
+      /* ให้ฟอนต์เป็นตัวหนาและจัดตัวเลขให้ตรง */
+      .result .price {
+        font-weight: bold;
+        color: #333;
+        text-align: right;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>ร้านอาหารไทย</h2>
+
+      <!-- เมนูหลัก -->
+      <h3>เลือกเมนูอาหาร</h3>
+      <label for="menu">เมนูอาหาร:</label>
+      <select id="menu">
+        <option value="100">ผัดไทย - 100 บาท</option>
+        <option value="150">ต้มยำกุ้ง - 150 บาท</option>
+        <option value="200">แกงเขียวหวาน - 200 บาท</option>
+        <option value="120">ส้มตำ - 120 บาท</option>
+        <option value="180">ข้าวผัด - 180 บาท</option>
+        <option value="170">ข้าวมันไก่ - 170 บาท</option>
+        <option value="250">ปลากระพงทอดน้ำปลา - 250 บาท</option>
+        <option value="160">ข้าวแกง - 160 บาท</option>
+        <option value="140">หมูสะเต๊ะ - 140 บาท</option>
+        <option value="130">ข้าวต้มปลา - 130 บาท</option>
+      </select>
+
+      <label for="qty">จำนวน:</label>
+      <input type="number" id="qty" min="1" />
+
+      <!-- เมนูเครื่องดื่ม -->
+      <h3>เลือกเครื่องดื่ม</h3>
+      <label for="drink">เครื่องดื่ม:</label>
+      <select id="drink">
+        <option value="20">น้ำดื่ม - 20 บาท</option>
+        <option value="30">น้ำมะพร้าว - 30 บาท</option>
+        <option value="25">น้ำส้ม - 25 บาท</option>
+        <option value="15">ชาเย็น - 15 บาท</option>
+        <option value="35">กาแฟ - 35 บาท</option>
+      </select>
+
+      <label for="qty">จำนวน:</label>
+      <input type="number" id="qty" min="1" />
+
+      <button onclick="calcTotal()">คำนวณราคา</button>
+
+      <div id="output" class="result" style="display: none"></div>
+    </div>
+
+    <script>
+      function calcTotal() {
+        // รับข้อมูลจาก input
+        let menuPrice = parseFloat(document.getElementById("menu").value);
+        let drinkPrice = parseFloat(document.getElementById("drink").value);
+        let qty = parseInt(document.getElementById("qty").value);
+
+        // ตรวจสอบค่าว่าง
+        if (isNaN(menuPrice) || isNaN(drinkPrice) || isNaN(qty)) {
+          alert("กรุณากรอกข้อมูลให้ครบ");
+          return;
+        }
+
+        // คำนวณราคาสินค้าทั้งหมด
+        let totalMenu = menuPrice * qty;
+        let totalDrink = drinkPrice * qty;
+        let total = totalMenu + totalDrink;
+
+        // คำนวณส่วนลด
+        let discount = total > 500 ? total * 0.1 : 0;
+
+        // คำนวณราคาสุทธิ
+        let net = total - discount;
+
+        // แสดงผล
+        let output = document.getElementById("output");
+        output.style.display = "block";
+        output.innerHTML = `
+        <strong>ผลลัพธ์</strong>
+        <p>ราคารวมอาหาร: <span class="price">${totalMenu.toFixed(
+          2
+        )} บาท</span></p>
+        <p>ราคารวมเครื่องดื่ม: <span class="price">${totalDrink.toFixed(
+          2
+        )} บาท</span></p>
+        <p>ส่วนลด: <span class="price">${discount.toFixed(2)} บาท</span></p>
+        <p>ราคาที่ต้องจ่าย: <span class="price">${net.toFixed(2)} บาท</span></p>
+    `;
+      }
+    </script>
+  </body>
+</html>
